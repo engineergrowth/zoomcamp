@@ -1,16 +1,23 @@
 ## 1
-rm
-
-## 2
 pip 24.3.1 from /usr/local/lib/python3.12/site-packages/pip (python 3.12)
 
-## 3
-SELECT COUNT(*)
-FROM green_tripdata
-WHERE DATE(lpep_pickup_datetime) = '2019-10-18'
-  AND DATE(lpep_dropoff_datetime) = '2019-10-18';
+## 2
+postgres - Hostname
+5432 - Port
 
-"17417"
+## 3
+SELECT
+    SUM(CASE WHEN trip_distance <= 1 THEN 1 ELSE 0 END) AS "Up to 1 mile",
+    SUM(CASE WHEN trip_distance > 1 AND trip_distance <= 3 THEN 1 ELSE 0 END) AS "Between 1 and 3 miles",
+    SUM(CASE WHEN trip_distance > 3 AND trip_distance <= 7 THEN 1 ELSE 0 END) AS "Between 3 and 7 miles",
+    SUM(CASE WHEN trip_distance > 7 AND trip_distance <= 10 THEN 1 ELSE 0 END) AS "Between 7 and 10 miles",
+    SUM(CASE WHEN trip_distance > 10 THEN 1 ELSE 0 END) AS "Over 10 miles"
+FROM
+    green_tripdata
+WHERE
+    lpep_pickup_datetime >= '2019-10-01'
+    AND lpep_pickup_datetime < '2019-11-01';
+
 
 ## 4
 
@@ -53,4 +60,4 @@ LIMIT 1;
 
 ## 7 
 
-Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+terraform init, terraform apply -auto-approve, terraform destroy
